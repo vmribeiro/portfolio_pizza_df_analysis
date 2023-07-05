@@ -23,6 +23,8 @@
 
 
 
+
+
 -- ****************************************************************
 -- Criação da tabela core com os dados "crus" (raw) pré-tratados
 -- ***************************************************************
@@ -65,10 +67,9 @@ create table core_pizza_orders as
 -- ***************************************************************
 
 
--- criar tabela fato de orders (1 order pode ter N order ids)
+-- tabela fato de orders (1 order pode ter N order ids)
 -- t12m significa "trailing 12 months": últimos 12 meses a partir da última data existente na tabela. 
 -- A estratégia de últimos meses é muito utilizado para reduzir volume em tabelas de data warehouses.
-
 drop table if exists fact_pizza_orders_t6m;
 create table fact_pizza_orders_t6m as
     
@@ -85,6 +86,7 @@ create table fact_pizza_orders_t6m as
 ;
 
 
+-- tabela fato de order details (1 order detail pode ter 1 order ids)
 drop table if exists fact_pizza_order_details_t6m;
 create table fact_pizza_order_details_t6m as 
 
@@ -102,6 +104,7 @@ create table fact_pizza_order_details_t6m as
 ;
 
 
+-- tabela de dimensão de pizzas
 drop table if exists dim_pizzas_t6m;
 create table dim_pizzas_t6m as 
 
@@ -258,7 +261,7 @@ create table pbi_orders_analysis_t6m as
         union all
 
 
-        -- Valores agregados a nível mensal, e à nível de produto
+        -- Valores agregados a nível semanal, e à nível de produto
         select    current_timestamp as snapshot_date 
                 
                 -- PBI Filters by grain of the analysis
@@ -300,7 +303,7 @@ create table pbi_orders_analysis_t6m as
         union all
 
 
-        -- Valores agregados a nível mensal, e à nível de categoria
+        -- Valores agregados a nível semanal, e à nível de categoria
         select    current_timestamp as snapshot_date 
                 
                 -- PBI Filters by grain of the analysis
